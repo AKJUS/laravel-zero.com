@@ -1,2 +1,8 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# The design explorations under /designs are linked from the footer and are
+# left crawlable on purpose: they carry a "noindex" of their own, and a robot
+# has to read the page to obey it.
+
+Sitemap: https://laravel-zero.com/sitemap.xml

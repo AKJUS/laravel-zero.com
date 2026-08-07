@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700|jetbrains-mono:400,500,700" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+    }
+
+    body {
+        position: relative;
+        background: #08090a;
+        font-family: 'Instrument Sans', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: #e4e4e7;
+    }
+
+    /* The hairline grid from the landing page hero, masked the same way. */
+    .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(to right, rgb(255 255 255 / 0.055) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(255 255 255 / 0.055) 1px, transparent 1px);
+        background-size: 72px 72px;
+        -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 0%, #000 25%, transparent 82%);
+        mask-image: radial-gradient(ellipse 85% 75% at 50% 0%, #000 25%, transparent 82%);
+    }
+
+    .glow {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 62% 58% at 50% -12%, rgb(16 185 129 / 0.22), transparent 68%);
+    }
+
+    .frame {
+        position: relative;
+        height: 100%;
+        padding: 66px 72px 62px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .brand span {
+        font-size: 25px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: #fff;
+    }
+
+    .middle {
+        margin: auto 0;
+    }
+
+    h1 {
+        font-size: 76px;
+        font-weight: 600;
+        line-height: 1.06;
+        letter-spacing: -0.035em;
+        color: #fff;
+    }
+
+    h1 em {
+        font-style: normal;
+        color: #71717a;
+    }
+
+    p.lede {
+        margin-top: 26px;
+        max-width: 900px;
+        font-size: 25px;
+        line-height: 1.5;
+        color: #a1a1aa;
+        text-wrap: balance;
+    }
+
+    .foot {
+        padding-top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+    }
+
+    .install {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 22px;
+        border: 1px solid rgb(255 255 255 / 0.10);
+        border-radius: 13px;
+        background: rgb(255 255 255 / 0.03);
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 19px;
+    }
+
+    .install .prompt { color: #34d399; }
+    .install code { color: #e4e4e7; }
+
+    .domain {
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 18px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #52525b;
+        white-space: nowrap;
+    }
+</style>
+</head>
+<body>
+    <div class="grid"></div>
+    <div class="glow"></div>
+
+    <div class="frame">
+        <div class="brand">
+            <svg width="40" height="40" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M48 13.4L56 5.4V4C56 1.8 54.2 0 52 0H4C1.8 0 0 1.8 0 4V42.6L8 34.6V8H42.6L16 34.6L8 42.6L0 50.6V52C0 54.2 1.8 56 4 56H52C54.2 56 56 54.2 56 52V13.4L48 21.4V48H13.4L33.3 28.1L48 13.4V13.4Z" fill="url(#mark)"/>
+                <defs>
+                    <linearGradient id="mark" x1="28" y1="0" x2="28" y2="56" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#68BF66"/>
+                        <stop offset="1" stop-color="#42B257"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span>Laravel Zero</span>
+        </div>
+
+        <div class="middle">
+            <h1>Console applications,<br><em>without the ceremony.</em></h1>
+
+            <p class="lede">
+                A micro-framework for crafting beautiful command-line applications, powered by the
+                Laravel components you already know.
+            </p>
+        </div>
+
+        <div class="foot">
+            <div class="install">
+                <span class="prompt">$</span>
+                <code>composer create-project laravel-zero/laravel-zero my-cli</code>
+            </div>
+            <div class="domain">laravel-zero.com</div>
+        </div>
+    </div>
+</body>
+</html>

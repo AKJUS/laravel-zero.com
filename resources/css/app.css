@@ -3,7 +3,385 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/* The documentation markdown carries a handful of utility classes of its own. */
+@source '../docs/**/*.md';
+
+/*
+|--------------------------------------------------------------------------
+| Midnight design tokens
+|--------------------------------------------------------------------------
+|
+| The single source of truth for the Midnight direction. Names are semantic
+| rather than literal, so a future palette change happens here and nowhere
+| else. Accent tokens alias Tailwind's emerald ramp so the rendered colour
+| is byte-identical to the original design reference.
+|
+*/
+
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* Surfaces */
+    --color-surface: #08090a;
+    --color-panel: #0d0f11;
+
+    /* Accent */
+    --color-accent: var(--color-emerald-400);
+    --color-accent-strong: var(--color-emerald-300);
+    --color-accent-glow: var(--color-emerald-500);
+
+    /* Terminal traffic lights */
+    --color-terminal-close: #ff5f57;
+    --color-terminal-minimise: #febc2e;
+    --color-terminal-expand: #28c840;
+
+    /* Syntax highlighting */
+    --color-syntax-keyword: var(--color-fuchsia-400);
+    --color-syntax-type: var(--color-amber-300);
+    --color-syntax-function: var(--color-sky-300);
+    --color-syntax-value: var(--color-emerald-400);
+    --color-syntax-comment: var(--color-zinc-600);
+    --color-syntax-property: var(--color-zinc-200);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Motion
+|--------------------------------------------------------------------------
+*/
+
+@keyframes zero-caret {
+    0%,
+    49% {
+        opacity: 1;
+    }
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes zero-rise {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@utility caret {
+    animation: zero-caret 1.1s steps(1) infinite;
+}
+
+@utility rise {
+    animation: zero-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/*
+| A dot leader for terminal-style output. Drawn on JetBrains Mono's 0.6em
+| advance so it reads as typed periods, but it fills the available width
+| exactly — the status column can never drift out of alignment.
+*/
+@utility leader {
+    background-image: radial-gradient(circle at 50% 50%, currentColor 0.05em, transparent 0.055em);
+    background-size: 0.6em 0.6em;
+    background-repeat: repeat-x;
+    background-position: left bottom 0.34em;
+}
+
+@utility grid-fade {
+    background-image:
+        linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, #000 30%, transparent 75%);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Focus
+|--------------------------------------------------------------------------
+|
+| A single visible focus treatment for every interactive element. Applied as
+| an outline rather than a ring so it never participates in layout and never
+| collides with the component's own border utilities.
+|
+*/
+
+@utility focus-ring {
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rise,
+    .caret {
+        animation: none;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Documentation prose
+|--------------------------------------------------------------------------
+|
+| The typographic scale for rendered markdown. Written by hand rather than
+| pulled from a plugin so the rhythm, colour and hairlines stay inside the
+| Midnight token set.
+|
+*/
+
+@layer components {
+    .docs-prose {
+        color: var(--color-zinc-400);
+        font-size: 0.9375rem;
+        line-height: 1.75;
+        /* Long unbroken tokens (paths, class names) must not set the measure. */
+        overflow-wrap: break-word;
+    }
+
+    .docs-prose > * + * {
+        margin-top: --spacing(5);
+    }
+
+    .docs-prose h2 {
+        margin-top: --spacing(14);
+        margin-bottom: --spacing(5);
+        padding-top: --spacing(8);
+        border-top: 1px solid --alpha(var(--color-white) / 5%);
+        color: var(--color-white);
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.3;
+    }
+
+    .docs-prose h3 {
+        margin-top: --spacing(10);
+        margin-bottom: --spacing(4);
+        color: var(--color-white);
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .docs-prose h4 {
+        margin-top: --spacing(8);
+        margin-bottom: --spacing(3);
+        color: var(--color-zinc-200);
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .docs-prose h2 + *,
+    .docs-prose h3 + *,
+    .docs-prose h4 + * {
+        margin-top: 0;
+    }
+
+    .docs-prose strong {
+        color: var(--color-zinc-200);
+        font-weight: 600;
+    }
+
+    .docs-prose a {
+        color: var(--color-accent-strong);
+        text-decoration: underline;
+        text-decoration-color: --alpha(var(--color-accent) / 35%);
+        text-underline-offset: 4px;
+        transition: text-decoration-color 150ms;
+    }
+
+    .docs-prose a:hover {
+        text-decoration-color: var(--color-accent);
+    }
+
+    .docs-prose ul,
+    .docs-prose ol {
+        padding-left: --spacing(5);
+    }
+
+    .docs-prose ul {
+        list-style-type: disc;
+    }
+
+    .docs-prose ol {
+        list-style-type: decimal;
+    }
+
+    .docs-prose li::marker {
+        color: var(--color-zinc-600);
+    }
+
+    .docs-prose li + li {
+        margin-top: --spacing(2);
+    }
+
+    .docs-prose li > ul,
+    .docs-prose li > ol {
+        margin-top: --spacing(2);
+    }
+
+    /* Inline code — code blocks style themselves inside their wrapper. */
+    .docs-prose :not(pre) > code {
+        border-radius: var(--radius-md);
+        border: 1px solid --alpha(var(--color-white) / 10%);
+        background-color: --alpha(var(--color-white) / 4%);
+        padding: 0.1em 0.4em;
+        color: var(--color-zinc-200);
+        font-family: var(--font-code);
+        font-size: 0.85em;
+    }
+
+    .docs-prose a > code {
+        color: inherit;
+    }
+
+    .docs-prose pre {
+        overflow-x: auto;
+        padding: --spacing(5);
+        color: var(--color-zinc-300);
+        font-family: var(--font-code);
+        font-size: 13px;
+        line-height: 1.7;
+        tab-size: 4;
+    }
+
+    .docs-prose table {
+        width: 100%;
+        min-width: 32rem;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        text-align: left;
+    }
+
+    .docs-prose th {
+        border-bottom: 1px solid --alpha(var(--color-white) / 10%);
+        padding: --spacing(3) --spacing(4) --spacing(3) 0;
+        color: var(--color-zinc-500);
+        font-family: var(--font-code);
+        font-size: 0.6875rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .docs-prose td {
+        border-bottom: 1px solid --alpha(var(--color-white) / 5%);
+        padding: --spacing(3) --spacing(4) --spacing(3) 0;
+        vertical-align: top;
+    }
+
+    .docs-prose tr > *:last-child {
+        padding-right: 0;
+    }
+
+    .docs-prose hr {
+        margin-block: --spacing(12);
+        border-color: --alpha(var(--color-white) / 10%);
+    }
+
+    .docs-prose img {
+        border-radius: var(--radius-xl);
+        border: 1px solid --alpha(var(--color-white) / 10%);
+    }
+
+    /* Callouts, from "> **Note:**" and "> **Warning:**" blockquotes. */
+    .docs-prose blockquote {
+        border-radius: var(--radius-xl);
+        border: 1px solid --alpha(var(--color-white) / 10%);
+        border-left-width: 2px;
+        background-color: --alpha(var(--color-white) / 2%);
+        padding: --spacing(4) --spacing(5);
+        color: var(--color-zinc-400);
+    }
+
+    .docs-prose blockquote > * + * {
+        margin-top: --spacing(3);
+    }
+
+    .docs-prose blockquote[data-callout='note'] {
+        border-left-color: var(--color-accent);
+    }
+
+    .docs-prose blockquote[data-callout='note'] strong {
+        color: var(--color-accent-strong);
+    }
+
+    .docs-prose blockquote[data-callout='warning'] {
+        border-left-color: var(--color-amber-400);
+    }
+
+    .docs-prose blockquote[data-callout='warning'] strong {
+        color: var(--color-amber-300);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Syntax highlighting
+|--------------------------------------------------------------------------
+|
+| Token classes emitted by tempest/highlight's CSS theme, mapped onto the
+| same palette the hand-authored code window on the landing page uses.
+|
+*/
+
+@layer components {
+    .hl-keyword {
+        color: var(--color-syntax-keyword);
+    }
+
+    .hl-type,
+    .hl-attribute,
+    .hl-generic {
+        color: var(--color-syntax-type);
+    }
+
+    .hl-property {
+        color: var(--color-syntax-function);
+    }
+
+    .hl-value,
+    .hl-literal,
+    .hl-number {
+        color: var(--color-syntax-value);
+    }
+
+    .hl-variable {
+        color: var(--color-syntax-property);
+    }
+
+    .hl-comment {
+        color: var(--color-syntax-comment);
+        font-style: italic;
+    }
+
+    .hl-operator {
+        color: var(--color-zinc-500);
+    }
+
+    .hl-injection {
+        color: var(--color-syntax-function);
+    }
+
+    .hl-addition {
+        color: var(--color-emerald-300);
+    }
+
+    .hl-deletion {
+        color: var(--color-rose-300);
+    }
 }
