@@ -13,9 +13,13 @@ return [
     | framework. This connection is utilized if another isn't explicitly
     | specified when running a cache operation inside the application.
     |
+    | This site has no database. The cache exists only to memoise the parsed
+    | documentation markdown, which is per-container and disposable, so the
+    | file store is the right fit — and it needs nothing provisioned.
+    |
     */
 
-    'default' => env('CACHE_STORE', 'database'),
+    'default' => env('CACHE_STORE', 'file'),
 
     /*
     |--------------------------------------------------------------------------
