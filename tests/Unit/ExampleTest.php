@@ -1,3 +1,5 @@
 <?php
 
-test('basic')->skip();
+test('that true is true', function () {
+    expect(true)->toBeTrue();
+});

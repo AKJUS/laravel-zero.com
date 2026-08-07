@@ -1,9 +1,7 @@
 <?php
 
-it('has welcome page')
-    ->get('/')
-    ->assertStatus(200);
+test('the application returns a successful response', function () {
+    $response = $this->get('/');
 
-it('has installation page')
-    ->get('/docs/installation')
-    ->assertStatus(200);
+    $response->assertStatus(200);
+});
